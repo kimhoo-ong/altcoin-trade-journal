@@ -1,0 +1,518 @@
+:root {
+  color-scheme: light;
+  --bg: #8db2ef;
+  --panel: #f7f1e4;
+  --panel-alt: #efe5d2;
+  --text: #171717;
+  --muted: #5c584d;
+  --line: #1a1a1a;
+  --accent: #111111;
+  --green: #6a8ef6;
+  --red: #ff7b60;
+  --yellow: #f8c44f;
+  --shadow: 0 18px 0 rgba(17, 17, 17, 0.14);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(rgba(20, 20, 20, 0.16) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(20, 20, 20, 0.16) 1px, transparent 1px);
+  background-size: 44px 44px;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--text);
+  background: transparent;
+  font-family: "Trebuchet MS", "Avenir Next", sans-serif;
+  line-height: 1.25;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+.pageShell {
+  width: min(1240px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 32px 0 64px;
+}
+
+.panel {
+  background: var(--panel);
+  border: 3px solid var(--line);
+  border-radius: 32px;
+  box-shadow: var(--shadow);
+}
+
+.heroShell {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 20px;
+  align-items: start;
+  padding: 32px;
+}
+
+.hero h1,
+.sectionHeading h2 {
+  margin: 0;
+  line-height: 1.02;
+  font-size: clamp(2rem, 5vw, 3.7rem);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  text-wrap: balance;
+}
+
+.heroCopy,
+.emptyState,
+.tradeMeta,
+.tradeNotes,
+.tradeDates dd,
+.guideList,
+.warningBanner,
+.formMessage {
+  color: var(--muted);
+}
+
+.eyebrow {
+  margin: 0 0 10px;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.warningBanner {
+  margin-bottom: 24px;
+  padding: 16px 18px;
+  border: 3px dashed var(--line);
+  border-radius: 22px;
+  background: #fffaf1;
+}
+
+.statsStrip,
+.topGrid,
+.boardGrid {
+  display: grid;
+  gap: 20px;
+}
+
+.statsStrip {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  margin-bottom: 24px;
+}
+
+.statCard {
+  padding: 18px 20px;
+  background: #fffdf7;
+  border: 3px solid var(--line);
+  border-radius: 24px;
+  display: grid;
+  align-content: start;
+  min-height: 120px;
+}
+
+.statCard span {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-bottom: 10px;
+  line-height: 1.1;
+}
+
+.statCard strong {
+  font-size: 2.1rem;
+  line-height: 1;
+  font-weight: 900;
+  display: block;
+}
+
+.topGrid {
+  grid-template-columns: 1.2fr 0.8fr;
+  margin-bottom: 24px;
+}
+
+.sectionHeading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 22px;
+  padding-top: 8px;
+  padding-left: 2px;
+}
+
+.sectionHeading h2 {
+  font-size: clamp(1.6rem, 3vw, 2.3rem);
+  padding-top: 4px;
+  padding-bottom: 6px;
+}
+
+.tradeForm {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.tradeForm,
+.guideCard,
+.boardGrid > .panel,
+.hero {
+  padding: 24px;
+}
+
+.tradeForm label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.fieldHint {
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.tradeForm input,
+.tradeForm select,
+.tradeForm textarea,
+.tradeActions button {
+  width: 100%;
+  border: 3px solid var(--line);
+  border-radius: 18px;
+  background: #fffdf7;
+  padding: 13px 14px;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.tradeForm textarea {
+  resize: vertical;
+}
+
+.fullWidth,
+.formActions {
+  grid-column: 1 / -1;
+}
+
+.formActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+button {
+  border: 3px solid var(--line);
+  border-radius: 999px;
+  padding: 13px 18px;
+  background: var(--accent);
+  color: #ffffff;
+  cursor: pointer;
+  transition: transform 180ms ease, opacity 180ms ease, background 180ms ease;
+}
+
+button:hover {
+  transform: translateY(-1px);
+}
+
+button:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+.guideList {
+  margin: 0;
+  padding-left: 20px;
+  display: grid;
+  gap: 14px;
+}
+
+.boardGrid {
+  grid-template-columns: 1.1fr 0.9fr;
+}
+
+.tradeList {
+  display: grid;
+  gap: 16px;
+}
+
+.compactList .tradeCard {
+  padding: 18px;
+}
+
+.tradeCard {
+  padding: 20px;
+  border: 3px solid var(--line);
+  border-radius: 26px;
+  background: #fffdf8;
+}
+
+.tradeCardTop {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.tradeSetup {
+  margin: 0 0 4px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.tradeMeta,
+.tradeNotes {
+  margin: 0;
+  line-height: 1.35;
+}
+
+.statusPill {
+  align-self: flex-start;
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-size: 0.8rem;
+  text-transform: capitalize;
+  background: var(--panel-alt);
+  border: 2px solid var(--line);
+}
+
+.statusPill.won {
+  background: rgba(106, 142, 246, 0.2);
+  color: #3457be;
+}
+
+.statusPill.lost {
+  background: rgba(255, 123, 96, 0.18);
+  color: #bd4c36;
+}
+
+.tradeImageWrap {
+  overflow: hidden;
+  border-radius: 18px;
+  margin-bottom: 14px;
+  border: 3px solid var(--line);
+}
+
+.tradeImage {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+}
+
+.tradeDates {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0 0 14px;
+}
+
+.tradeDates dt {
+  margin-bottom: 6px;
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.tradeDates dd {
+  margin: 0;
+}
+
+.tradeActions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.tradeActions .positive {
+  background: #86a9ff;
+  color: var(--text);
+}
+
+.tradeActions .negative {
+  background: #ff8a70;
+  color: var(--text);
+}
+
+.tableWrap {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 14px 12px;
+  text-align: left;
+  border-bottom: 2px solid rgba(17, 17, 17, 0.18);
+}
+
+th {
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.heroMini {
+  padding: 24px;
+  display: grid;
+  align-content: start;
+  gap: 18px;
+}
+
+.heroBadgeWrap {
+  display: grid;
+  gap: 12px;
+}
+
+.heroBadge {
+  min-width: 130px;
+  padding: 18px 16px;
+  border: 3px solid var(--line);
+  border-radius: 24px;
+  background: #97b8ff;
+  font-size: 1.25rem;
+  font-weight: 900;
+  text-align: center;
+  line-height: 1;
+}
+
+.heroBadge.coral {
+  background: #ff876a;
+}
+
+.miniStatRow {
+  padding: 18px;
+  border: 3px solid var(--line);
+  border-radius: 24px;
+  background: #fffdf8;
+}
+
+.miniStatRow strong {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 1.55rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.posterCard {
+  overflow: hidden;
+}
+
+.posterArt {
+  position: relative;
+  min-height: 320px;
+  display: grid;
+  align-content: start;
+  gap: 14px;
+}
+
+.posterCircle {
+  position: absolute;
+  right: 8px;
+  bottom: -8px;
+  width: 180px;
+  height: 180px;
+  border-radius: 999px;
+  background: #ffd15f;
+  border: 3px solid var(--line);
+}
+
+.posterBlock {
+  position: relative;
+  z-index: 1;
+  width: 78%;
+  padding: 18px;
+  border: 3px solid var(--line);
+  border-radius: 24px;
+  background: #98b8fb;
+}
+
+.posterBlock.peach {
+  margin-left: auto;
+  background: #ff8a70;
+}
+
+.posterBlock span {
+  display: block;
+  margin-bottom: 8px;
+  color: rgba(23, 23, 23, 0.72);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.posterBlock strong {
+  font-size: 1.35rem;
+  font-weight: 900;
+  line-height: 1.05;
+}
+
+@media (max-width: 980px) {
+  .heroShell,
+  .topGrid,
+  .boardGrid,
+  .statsStrip {
+    grid-template-columns: 1fr;
+  }
+
+  .hero {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .pageShell {
+    width: min(100% - 20px, 100%);
+    padding-top: 20px;
+  }
+
+  .tradeForm,
+  .tradeDates,
+  .tradeActions {
+    grid-template-columns: 1fr;
+  }
+
+  .hero,
+  .tradeForm,
+  .guideCard,
+  .boardGrid > .panel {
+    padding: 20px;
+  }
+}
