@@ -134,6 +134,11 @@ export function TradeForm() {
       </div>
       <form className="tradeForm" onSubmit={handleSubmit}>
         <label>
+          Coin
+          <input name="coin" type="text" placeholder="BTC" maxLength={20} required />
+        </label>
+
+        <label>
           Setup
           <select name="setup" value={setup} onChange={(event) => setSetup(event.target.value)}>
             {AL_BROOKS_SETUPS.map((option) => (

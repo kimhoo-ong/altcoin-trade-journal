@@ -29,6 +29,7 @@ export type AlBrooksSetup = (typeof AL_BROOKS_SETUPS)[number] | string;
 
 export type Trade = {
   id: string;
+  coin: string;
   setup: string;
   custom_setup: string | null;
   direction: TradeDirection;

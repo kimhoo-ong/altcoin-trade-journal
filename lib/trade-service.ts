@@ -67,6 +67,7 @@ export function buildStats(trades: Trade[]): DashboardStats {
 }
 
 export async function createTrade({
+  coin,
   setup,
   customSetup,
   direction,
@@ -75,6 +76,7 @@ export async function createTrade({
   notes,
   screenshot
 }: {
+  coin: string;
   setup: string;
   customSetup?: string;
   direction: string;
@@ -107,6 +109,7 @@ export async function createTrade({
   const { data, error } = await supabase
     .from("trades")
     .insert({
+      coin,
       setup,
       custom_setup: customSetup || null,
       direction,

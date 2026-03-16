@@ -4,6 +4,7 @@ import { createTrade } from "@/lib/trade-service";
 export async function POST(request: Request) {
   try {
     const formData = await request.formData();
+    const coin = String(formData.get("coin") || "").trim().toUpperCase();
     const setup = String(formData.get("setup") || "");
     const direction = String(formData.get("direction") || "");
     const stopLossType = String(formData.get("stopLossType") || "");
@@ -13,11 +14,12 @@ export async function POST(request: Request) {
     const screenshotValue = formData.get("screenshot");
     const screenshot = screenshotValue instanceof File ? screenshotValue : null;
 
-    if (!setup || !direction || !stopLossType || !takeProfitType) {
+    if (!coin || !setup || !direction || !stopLossType || !takeProfitType) {
       return NextResponse.json({ error: "Missing required fields." }, { status: 400 });
     }
 
     const trade = await createTrade({
+      coin,
       setup,
       customSetup,
       direction,

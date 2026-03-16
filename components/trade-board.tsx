@@ -37,7 +37,9 @@ function TradeCard({ trade }: { trade: Trade }) {
     <article className="tradeCard">
       <div className="tradeCardTop">
         <div>
-          <p className="tradeSetup">{getDisplaySetup(trade)}</p>
+          <p className="tradeSetup">
+            {trade.coin} · {getDisplaySetup(trade)}
+          </p>
           <p className="tradeMeta">
             {trade.direction} · SL {trade.stop_loss_type} · TP {getTakeProfitLabel(trade.take_profit_type, trade.direction)}
           </p>

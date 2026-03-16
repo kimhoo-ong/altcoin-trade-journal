@@ -40,6 +40,7 @@ create extension if not exists "pgcrypto";
 
 create table if not exists public.trades (
   id uuid primary key default gen_random_uuid(),
+  coin text not null,
   setup text not null,
   custom_setup text,
   direction text not null check (direction in ('long', 'short')),
@@ -52,6 +53,13 @@ create table if not exists public.trades (
   closed_at timestamptz,
   created_at timestamptz not null default timezone('utc', now())
 );
+```
+
+If your table already exists, run this too:
+
+```sql
+alter table public.trades
+add column if not exists coin text not null default 'BTC';
 ```
 
 Create a public storage bucket named `trade-screenshots` if you keep the default bucket name.
