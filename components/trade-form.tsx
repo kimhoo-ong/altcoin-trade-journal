@@ -13,6 +13,14 @@ import { getTakeProfitLabel } from "@/lib/utils";
 const initialMessage = "";
 
 async function compressImage(file: File) {
+  if (!file.type.startsWith("image/")) {
+    return file;
+  }
+
+  if (file.size <= 1.5 * 1024 * 1024) {
+    return file;
+  }
+
   const imageUrl = URL.createObjectURL(file);
 
   try {
@@ -23,7 +31,7 @@ async function compressImage(file: File) {
       img.src = imageUrl;
     });
 
-    const maxWidth = 1600;
+    const maxWidth = 2200;
     const ratio = Math.min(1, maxWidth / image.width);
     const canvas = document.createElement("canvas");
     canvas.width = Math.round(image.width * ratio);
@@ -37,15 +45,19 @@ async function compressImage(file: File) {
     context.drawImage(image, 0, 0, canvas.width, canvas.height);
 
     const blob = await new Promise<Blob | null>((resolve) => {
-      canvas.toBlob(resolve, "image/webp", 0.78);
+      canvas.toBlob(resolve, "image/jpeg", 0.9);
     });
 
     if (!blob) {
       throw new Error("Could not compress screenshot.");
     }
 
+    if (blob.size >= file.size) {
+      return file;
+    }
+
     const safeName = file.name.replace(/\.[^.]+$/, "") || "trade-screenshot";
-    return new File([blob], `${safeName}.webp`, { type: "image/webp" });
+    return new File([blob], `${safeName}.jpg`, { type: "image/jpeg" });
   } finally {
     URL.revokeObjectURL(imageUrl);
   }
@@ -73,7 +85,7 @@ export function TradeForm() {
       const optimized = await compressImage(file);
       setCompressedFile(optimized);
       const mb = (optimized.size / 1024 / 1024).toFixed(2);
-      setFileLabel(`${optimized.name} ready (${mb} MB, compressed)`);
+      setFileLabel(`${optimized.name} ready (${mb} MB, ${optimized === file ? "original" : "optimized"})`);
     } catch (error) {
       setCompressedFile(null);
       setFileLabel(error instanceof Error ? error.message : "Screenshot compression failed.");

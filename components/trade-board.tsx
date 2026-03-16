@@ -53,6 +53,7 @@ function TradeCard({ trade }: { trade: Trade }) {
             width={800}
             height={480}
             className="tradeImage"
+            unoptimized
           />
         </div>
       ) : null}
