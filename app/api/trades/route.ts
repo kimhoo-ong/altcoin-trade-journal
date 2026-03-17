@@ -5,28 +5,21 @@ export async function POST(request: Request) {
   try {
     const formData = await request.formData();
     const coin = String(formData.get("coin") || "").trim().toUpperCase();
-    const setup = String(formData.get("setup") || "");
     const direction = String(formData.get("direction") || "");
     const stopLossType = String(formData.get("stopLossType") || "");
     const takeProfitType = String(formData.get("takeProfitType") || "");
-    const customSetup = String(formData.get("customSetup") || "");
     const notes = String(formData.get("notes") || "");
-    const screenshotValue = formData.get("screenshot");
-    const screenshot = screenshotValue instanceof File ? screenshotValue : null;
 
-    if (!coin || !setup || !direction || !stopLossType || !takeProfitType) {
+    if (!coin || !direction || !stopLossType || !takeProfitType) {
       return NextResponse.json({ error: "Missing required fields." }, { status: 400 });
     }
 
     const trade = await createTrade({
       coin,
-      setup,
-      customSetup,
       direction,
       stopLossType,
       takeProfitType,
-      notes,
-      screenshot
+      notes
     });
 
     return NextResponse.json({ trade }, { status: 201 });

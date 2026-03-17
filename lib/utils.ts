@@ -18,14 +18,6 @@ export function formatDateTime(value: string | null) {
   }).format(new Date(value));
 }
 
-export function getDisplaySetup(trade: Pick<Trade, "setup" | "custom_setup">) {
-  if (trade.setup === "Other" && trade.custom_setup) {
-    return trade.custom_setup;
-  }
-
-  return trade.setup;
-}
-
 export function getTakeProfitLabel(
   takeProfitType: TakeProfitOption | string,
   direction: Trade["direction"]
@@ -35,4 +27,11 @@ export function getTakeProfitLabel(
   }
 
   return takeProfitType;
+}
+
+export function formatPnl(value: number) {
+  return new Intl.NumberFormat("en-MY", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(value);
 }

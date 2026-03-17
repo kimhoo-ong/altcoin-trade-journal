@@ -1,6 +1,5 @@
-import { getBucketName, getSupabaseAdminClient, isSupabaseConfigured } from "@/lib/supabase";
-import { DashboardStats, SetupStat, Trade } from "@/lib/types";
-import { getDisplaySetup } from "@/lib/utils";
+import { getSupabaseAdminClient, isSupabaseConfigured } from "@/lib/supabase";
+import { DashboardStats, Trade } from "@/lib/types";
 
 export async function listTrades(): Promise<Trade[]> {
   if (!isSupabaseConfigured()) {
@@ -30,30 +29,37 @@ export function buildStats(trades: Trade[]): DashboardStats {
   const lostTrades = trades.filter((trade) => trade.status === "lost").length;
   const openTrades = trades.filter((trade) => trade.status === "open").length;
   const closedTrades = wonTrades + lostTrades;
+  const totalPnl = trades.reduce((sum, trade) => sum + (trade.pnl_amount ?? 0), 0);
+  const dailyMap = new Map<string, { trades: number; wins: number; losses: number; pnl: number }>();
 
-  const setupMap = trades.reduce<Map<string, { total: number; won: number; lost: number }>>((map, trade) => {
-    const key = getDisplaySetup(trade);
-    const current = map.get(key) ?? { total: 0, won: 0, lost: 0 };
-    current.total += 1;
+  for (const trade of trades) {
+    if (!trade.closed_at) {
+      continue;
+    }
+
+    const date = trade.closed_at.slice(0, 10);
+    const current = dailyMap.get(date) ?? { trades: 0, wins: 0, losses: 0, pnl: 0 };
+    current.trades += 1;
     if (trade.status === "won") {
-      current.won += 1;
+      current.wins += 1;
     }
     if (trade.status === "lost") {
-      current.lost += 1;
+      current.losses += 1;
     }
-    map.set(key, current);
-    return map;
-  }, new Map());
+    current.pnl += trade.pnl_amount ?? 0;
+    dailyMap.set(date, current);
+  }
 
-  const bySetup: SetupStat[] = Array.from(setupMap.entries())
-    .map(([setup, values]) => ({
-      setup,
-      total: values.total,
-      won: values.won,
-      lost: values.lost,
-      winRate: values.won + values.lost === 0 ? 0 : Math.round((values.won / (values.won + values.lost)) * 100)
+  const dailyPnl = Array.from(dailyMap.entries())
+    .map(([date, value]) => ({
+      date,
+      trades: value.trades,
+      wins: value.wins,
+      losses: value.losses,
+      pnl: value.pnl,
+      winRate: value.wins + value.losses === 0 ? 0 : Math.round((value.wins / (value.wins + value.losses)) * 100)
     }))
-    .sort((a, b) => b.total - a.total || a.setup.localeCompare(b.setup));
+    .sort((a, b) => b.date.localeCompare(a.date));
 
   return {
     totalTrades: trades.length,
@@ -62,61 +68,37 @@ export function buildStats(trades: Trade[]): DashboardStats {
     lostTrades,
     closedTrades,
     overallWinRate: closedTrades === 0 ? 0 : Math.round((wonTrades / closedTrades) * 100),
-    bySetup
+    totalPnl,
+    dailyPnl
   };
 }
 
 export async function createTrade({
   coin,
-  setup,
-  customSetup,
   direction,
   stopLossType,
   takeProfitType,
-  notes,
-  screenshot
+  notes
 }: {
   coin: string;
-  setup: string;
-  customSetup?: string;
   direction: string;
   stopLossType: string;
   takeProfitType: string;
   notes?: string;
-  screenshot?: File | null;
 }) {
   const supabase = getSupabaseAdminClient();
-  let screenshotUrl: string | null = null;
-
-  if (screenshot && screenshot.size > 0) {
-    const filename = `${Date.now()}-${screenshot.name.replaceAll(/\s+/g, "-")}`;
-    const arrayBuffer = await screenshot.arrayBuffer();
-    const { error: uploadError } = await supabase.storage
-      .from(getBucketName())
-      .upload(filename, arrayBuffer, {
-        contentType: screenshot.type || "image/png",
-        upsert: false
-      });
-
-    if (uploadError) {
-      throw new Error(uploadError.message);
-    }
-
-    const { data } = supabase.storage.from(getBucketName()).getPublicUrl(filename);
-    screenshotUrl = data.publicUrl;
-  }
 
   const { data, error } = await supabase
     .from("trades")
     .insert({
       coin,
-      setup,
-      custom_setup: customSetup || null,
+      setup: "General",
+      custom_setup: null,
       direction,
       stop_loss_type: stopLossType,
       take_profit_type: takeProfitType,
+      pnl_amount: null,
       notes: notes || null,
-      screenshot_url: screenshotUrl,
       status: "open",
       opened_at: new Date().toISOString()
     })
@@ -130,12 +112,13 @@ export async function createTrade({
   return data as Trade;
 }
 
-export async function settleTrade(id: string, status: "won" | "lost") {
+export async function settleTrade(id: string, status: "won" | "lost", pnlAmount: number) {
   const supabase = getSupabaseAdminClient();
   const { data, error } = await supabase
     .from("trades")
     .update({
       status,
+      pnl_amount: pnlAmount,
       closed_at: new Date().toISOString()
     })
     .eq("id", id)

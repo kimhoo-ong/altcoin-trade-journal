@@ -15,8 +15,8 @@ export default async function HomePage() {
       <section className="heroShell">
         <section className="hero panel">
           <div>
-            <p className="eyebrow">Trade Journal</p>
-            <h1>Log. Track. Review.</h1>
+            <p className="eyebrow">Journal</p>
+            <h1>Open. Close. Track.</h1>
           </div>
           <div className="heroBadgeWrap">
             <div className="heroBadge">Open {stats.openTrades}</div>
@@ -25,14 +25,14 @@ export default async function HomePage() {
         </section>
 
         <section className="heroMini panel">
-          <p className="eyebrow">Today</p>
+          <p className="eyebrow">Stats</p>
           <div className="miniStatRow">
             <strong>{stats.totalTrades}</strong>
             <span>Trades</span>
           </div>
           <div className="miniStatRow">
-            <strong>{stats.bySetup[0]?.setup ?? "No setup"}</strong>
-            <span>Top setup</span>
+            <strong>{stats.totalPnl > 0 ? "+" : ""}{stats.totalPnl.toFixed(2)}</strong>
+            <span>Total P/L</span>
           </div>
         </section>
       </section>
@@ -55,11 +55,11 @@ export default async function HomePage() {
             <div className="posterCircle" />
             <div className="posterBlock">
               <span>Entry</span>
-              <strong>Screenshot</strong>
+              <strong>Record trade</strong>
             </div>
             <div className="posterBlock peach">
               <span>Exit</span>
-              <strong>Profit / Loss</strong>
+              <strong>Win or lose</strong>
             </div>
           </div>
         </section>
