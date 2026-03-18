@@ -40,6 +40,7 @@ create extension if not exists "pgcrypto";
 create table if not exists public.trades (
   id uuid primary key default gen_random_uuid(),
   coin text not null,
+  model_recommendation text not null check (model_recommendation in ('CC', 'GPT')),
   setup text not null,
   custom_setup text,
   direction text not null check (direction in ('long', 'short')),
@@ -59,6 +60,9 @@ If your table already exists, run this too:
 ```sql
 alter table public.trades
 add column if not exists coin text not null default 'BTC';
+
+alter table public.trades
+add column if not exists model_recommendation text not null default 'CC';
 
 alter table public.trades
 add column if not exists pnl_amount numeric;

@@ -75,12 +75,14 @@ export function buildStats(trades: Trade[]): DashboardStats {
 
 export async function createTrade({
   coin,
+  modelRecommendation,
   direction,
   stopLossType,
   takeProfitType,
   notes
 }: {
   coin: string;
+  modelRecommendation: string;
   direction: string;
   stopLossType: string;
   takeProfitType: string;
@@ -92,6 +94,7 @@ export async function createTrade({
     .from("trades")
     .insert({
       coin,
+      model_recommendation: modelRecommendation,
       setup: "General",
       custom_setup: null,
       direction,

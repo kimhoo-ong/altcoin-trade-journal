@@ -2,7 +2,7 @@
 
 import { FormEvent, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { STOP_LOSS_OPTIONS, TAKE_PROFIT_OPTIONS, TRADE_DIRECTIONS } from "@/lib/types";
+import { MODEL_RECOMMENDATIONS, STOP_LOSS_OPTIONS, TAKE_PROFIT_OPTIONS, TRADE_DIRECTIONS } from "@/lib/types";
 import { getTakeProfitLabel } from "@/lib/utils";
 
 const initialMessage = "";
@@ -49,6 +49,17 @@ export function TradeForm() {
         <label>
           Coin
           <input name="coin" type="text" placeholder="BTC" maxLength={20} required />
+        </label>
+
+        <label>
+          Model
+          <select name="modelRecommendation" defaultValue={MODEL_RECOMMENDATIONS[0]}>
+            {MODEL_RECOMMENDATIONS.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
         </label>
 
         <label>

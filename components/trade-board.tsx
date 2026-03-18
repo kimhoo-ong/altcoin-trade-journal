@@ -47,7 +47,7 @@ function TradeCard({ trade }: { trade: Trade }) {
             {trade.coin}
           </p>
           <p className="tradeMeta">
-            {trade.direction} · SL {trade.stop_loss_type} · TP {getTakeProfitLabel(trade.take_profit_type, trade.direction)}
+            {trade.model_recommendation} · {trade.direction} · SL {trade.stop_loss_type} · TP {getTakeProfitLabel(trade.take_profit_type, trade.direction)}
           </p>
         </div>
         <span className={cn("statusPill", trade.status)}>{trade.status}</span>

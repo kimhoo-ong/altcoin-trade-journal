@@ -5,17 +5,19 @@ export async function POST(request: Request) {
   try {
     const formData = await request.formData();
     const coin = String(formData.get("coin") || "").trim().toUpperCase();
+    const modelRecommendation = String(formData.get("modelRecommendation") || "");
     const direction = String(formData.get("direction") || "");
     const stopLossType = String(formData.get("stopLossType") || "");
     const takeProfitType = String(formData.get("takeProfitType") || "");
     const notes = String(formData.get("notes") || "");
 
-    if (!coin || !direction || !stopLossType || !takeProfitType) {
+    if (!coin || !modelRecommendation || !direction || !stopLossType || !takeProfitType) {
       return NextResponse.json({ error: "Missing required fields." }, { status: 400 });
     }
 
     const trade = await createTrade({
       coin,
+      modelRecommendation,
       direction,
       stopLossType,
       takeProfitType,
