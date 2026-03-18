@@ -153,6 +153,7 @@ function ModelStatsSection({ stats }: { stats: DashboardStats }) {
                 <th>Trades</th>
                 <th>Won</th>
                 <th>Lost</th>
+                <th>P/L</th>
                 <th>Win %</th>
               </tr>
             </thead>
@@ -163,6 +164,7 @@ function ModelStatsSection({ stats }: { stats: DashboardStats }) {
                   <td>{item.trades}</td>
                   <td>{item.wins}</td>
                   <td>{item.losses}</td>
+                  <td>{item.pnl > 0 ? "+" : ""}{formatPnl(item.pnl)}</td>
                   <td>{item.winRate}%</td>
                 </tr>
               ))}

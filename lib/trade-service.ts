@@ -31,10 +31,10 @@ export function buildStats(trades: Trade[]): DashboardStats {
   const closedTrades = wonTrades + lostTrades;
   const totalPnl = trades.reduce((sum, trade) => sum + (trade.pnl_amount ?? 0), 0);
   const dailyMap = new Map<string, { trades: number; wins: number; losses: number; pnl: number }>();
-  const modelMap = new Map<Trade["model_recommendation"], { trades: number; wins: number; losses: number }>();
+  const modelMap = new Map<Trade["model_recommendation"], { trades: number; wins: number; losses: number; pnl: number }>();
 
   for (const trade of trades) {
-    const modelCurrent = modelMap.get(trade.model_recommendation) ?? { trades: 0, wins: 0, losses: 0 };
+    const modelCurrent = modelMap.get(trade.model_recommendation) ?? { trades: 0, wins: 0, losses: 0, pnl: 0 };
     modelCurrent.trades += 1;
     if (trade.status === "won") {
       modelCurrent.wins += 1;
@@ -42,6 +42,7 @@ export function buildStats(trades: Trade[]): DashboardStats {
     if (trade.status === "lost") {
       modelCurrent.losses += 1;
     }
+    modelCurrent.pnl += trade.pnl_amount ?? 0;
     modelMap.set(trade.model_recommendation, modelCurrent);
 
     if (!trade.closed_at) {
@@ -78,6 +79,7 @@ export function buildStats(trades: Trade[]): DashboardStats {
       trades: value.trades,
       wins: value.wins,
       losses: value.losses,
+      pnl: value.pnl,
       winRate: value.wins + value.losses === 0 ? 0 : Math.round((value.wins / (value.wins + value.losses)) * 100)
     }))
     .sort((a, b) => a.model.localeCompare(b.model));

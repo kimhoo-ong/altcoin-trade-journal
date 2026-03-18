@@ -41,6 +41,7 @@ export type ModelStat = {
   trades: number;
   wins: number;
   losses: number;
+  pnl: number;
   winRate: number;
 };
 
