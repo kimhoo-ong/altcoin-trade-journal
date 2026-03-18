@@ -179,13 +179,24 @@ function ModelStatsSection({ stats }: { stats: DashboardStats }) {
 export function TradeBoard({ trades, stats }: { trades: Trade[]; stats: DashboardStats }) {
   const openTrades = trades.filter((trade) => trade.status === "open");
   const closedTrades = trades.filter((trade) => trade.status !== "open");
+  const [openPage, setOpenPage] = useState(1);
   const [closedPage, setClosedPage] = useState(1);
+  const openPageSize = 8;
   const closedPageSize = 8;
+  const openTotalPages = Math.max(1, Math.ceil(openTrades.length / openPageSize));
   const closedTotalPages = Math.max(1, Math.ceil(closedTrades.length / closedPageSize));
+  const paginatedOpenTrades = openTrades.slice(
+    (openPage - 1) * openPageSize,
+    openPage * openPageSize
+  );
   const paginatedClosedTrades = closedTrades.slice(
     (closedPage - 1) * closedPageSize,
     closedPage * closedPageSize
   );
+
+  useEffect(() => {
+    setOpenPage((current) => Math.min(current, openTotalPages));
+  }, [openTotalPages]);
 
   useEffect(() => {
     setClosedPage((current) => Math.min(current, closedTotalPages));
@@ -202,9 +213,25 @@ export function TradeBoard({ trades, stats }: { trades: Trade[]; stats: Dashboar
           {openTrades.length === 0 ? (
             <p className="emptyState">No open trades at the moment.</p>
           ) : (
-            openTrades.map((trade) => <TradeCard key={trade.id} trade={trade} />)
+            paginatedOpenTrades.map((trade) => <TradeCard key={trade.id} trade={trade} />)
           )}
         </div>
+        {openTrades.length > openPageSize ? (
+          <div className="paginationBar">
+            <button disabled={openPage === 1} onClick={() => setOpenPage((page) => Math.max(1, page - 1))}>
+              Prev
+            </button>
+            <span>
+              Page {openPage} / {openTotalPages}
+            </span>
+            <button
+              disabled={openPage === openTotalPages}
+              onClick={() => setOpenPage((page) => Math.min(openTotalPages, page + 1))}
+            >
+              Next
+            </button>
+          </div>
+        ) : null}
       </section>
 
       <section className="panel">
