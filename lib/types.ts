@@ -36,6 +36,14 @@ export type DailyPnl = {
   winRate: number;
 };
 
+export type ModelStat = {
+  model: ModelRecommendation;
+  trades: number;
+  wins: number;
+  losses: number;
+  winRate: number;
+};
+
 export type DashboardStats = {
   totalTrades: number;
   openTrades: number;
@@ -45,4 +53,5 @@ export type DashboardStats = {
   overallWinRate: number;
   totalPnl: number;
   dailyPnl: DailyPnl[];
+  byModel: ModelStat[];
 };

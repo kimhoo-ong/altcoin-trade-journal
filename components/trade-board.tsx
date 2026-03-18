@@ -135,6 +135,45 @@ function DailyPnlSection({ stats }: { stats: DashboardStats }) {
   );
 }
 
+function ModelStatsSection({ stats }: { stats: DashboardStats }) {
+  return (
+    <section className="panel">
+      <div className="sectionHeading">
+        <p className="eyebrow">Models</p>
+        <h2>Win rate</h2>
+      </div>
+      {stats.byModel.length === 0 ? (
+        <p className="emptyState">No model stats yet.</p>
+      ) : (
+        <div className="tableWrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Model</th>
+                <th>Trades</th>
+                <th>Won</th>
+                <th>Lost</th>
+                <th>Win %</th>
+              </tr>
+            </thead>
+            <tbody>
+              {stats.byModel.map((item) => (
+                <tr key={item.model}>
+                  <td>{item.model}</td>
+                  <td>{item.trades}</td>
+                  <td>{item.wins}</td>
+                  <td>{item.losses}</td>
+                  <td>{item.winRate}%</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </section>
+  );
+}
+
 export function TradeBoard({ trades, stats }: { trades: Trade[]; stats: DashboardStats }) {
   const openTrades = trades.filter((trade) => trade.status === "open");
   const closedTrades = trades.filter((trade) => trade.status !== "open");
@@ -169,6 +208,7 @@ export function TradeBoard({ trades, stats }: { trades: Trade[]; stats: Dashboar
         </div>
       </section>
       <DailyPnlSection stats={stats} />
+      <ModelStatsSection stats={stats} />
     </div>
   );
 }
