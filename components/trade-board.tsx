@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { DashboardStats, Trade } from "@/lib/types";
 import { cn, formatDateTime, formatPnl, getTakeProfitLabel } from "@/lib/utils";
 
@@ -179,6 +179,17 @@ function ModelStatsSection({ stats }: { stats: DashboardStats }) {
 export function TradeBoard({ trades, stats }: { trades: Trade[]; stats: DashboardStats }) {
   const openTrades = trades.filter((trade) => trade.status === "open");
   const closedTrades = trades.filter((trade) => trade.status !== "open");
+  const [closedPage, setClosedPage] = useState(1);
+  const closedPageSize = 8;
+  const closedTotalPages = Math.max(1, Math.ceil(closedTrades.length / closedPageSize));
+  const paginatedClosedTrades = closedTrades.slice(
+    (closedPage - 1) * closedPageSize,
+    closedPage * closedPageSize
+  );
+
+  useEffect(() => {
+    setClosedPage((current) => Math.min(current, closedTotalPages));
+  }, [closedTotalPages]);
 
   return (
     <div className="boardGrid">
@@ -205,9 +216,25 @@ export function TradeBoard({ trades, stats }: { trades: Trade[]; stats: Dashboar
           {closedTrades.length === 0 ? (
             <p className="emptyState">Closed trades will appear here.</p>
           ) : (
-            closedTrades.map((trade) => <TradeCard key={trade.id} trade={trade} />)
+            paginatedClosedTrades.map((trade) => <TradeCard key={trade.id} trade={trade} />)
           )}
         </div>
+        {closedTrades.length > closedPageSize ? (
+          <div className="paginationBar">
+            <button disabled={closedPage === 1} onClick={() => setClosedPage((page) => Math.max(1, page - 1))}>
+              Prev
+            </button>
+            <span>
+              Page {closedPage} / {closedTotalPages}
+            </span>
+            <button
+              disabled={closedPage === closedTotalPages}
+              onClick={() => setClosedPage((page) => Math.min(closedTotalPages, page + 1))}
+            >
+              Next
+            </button>
+          </div>
+        ) : null}
       </section>
       <DailyPnlSection stats={stats} />
       <ModelStatsSection stats={stats} />

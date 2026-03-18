@@ -264,6 +264,24 @@ button:disabled {
   gap: 16px;
 }
 
+.paginationBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.paginationBar span {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.paginationBar button {
+  min-width: 92px;
+}
+
 .compactList .tradeCard {
   padding: 18px;
 }
